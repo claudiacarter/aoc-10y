@@ -8,7 +8,35 @@ def parse_instructions(file):
         instructions = re.split(r",\s",input)
     return instructions
 
-instructions = parse_instructions("/Users/cc52/repositories/personal/aoc-10y/day1/input.txt")
+def get_coords_for_move(start_coord, num_blocks, direction):
+    coords=[]
+    current_coord = start_coord
+    if direction == "N":
+        for n in range(num_blocks):
+            step_coord = (current_coord[0],current_coord[1] + 1)
+            coords.append(step_coord)
+            current_coord = coords[-1]
+    elif direction == "E":
+        for n in range(num_blocks):
+            step_coord = (current_coord[0] + 1,current_coord[1])
+            coords.append(step_coord)
+            current_coord = coords[-1]
+    elif direction == "S":
+        for n in range(num_blocks):
+            step_coord = (current_coord[0],current_coord[1] - 1)
+            coords.append(step_coord)
+            current_coord = coords[-1]
+    elif direction == "W":
+        for n in range(num_blocks):
+            step_coord = (current_coord[0] - 1,current_coord[1])
+            coords.append(step_coord)
+            current_coord = coords[-1]
+    else:
+        print("Error - direction not found")
+        exit(1)
+    return coords
+
+instructions = parse_instructions("/Users/cc52/repositories/personal/aoc-10y/day1/2016/test_input.txt")
 directions = ["N","E","S","W"]
 
 # Set up direction trackers
@@ -19,13 +47,12 @@ steps_south = 0
 steps_west = 0
 
 # Initiate coordinates history
-starting_point = (0,0)
-coord_hist = [starting_point]
+current_coord = (0,0)
+coord_hist = [current_coord]
 return_coord = []
 
 for instruction in instructions:
     # Parse the instruction
-    current_blocks = int(re.search(r'\d+', instruction).group())
     rotation = re.search(r'\w', instruction).group()
     i = directions.index(current_direction)
 
@@ -43,32 +70,14 @@ for instruction in instructions:
         exit(1)
     
     # Then add the number of blocks to the correct direction tally
-    current_coord = coord_hist[-1]
-    if current_direction == "N":
-        steps_north += current_blocks
-        new_coord = (current_coord[0],current_coord[1] + current_blocks)
-        if new_coord in coord_hist:
-            return_coord.append(new_coord)
+    current_blocks = int(re.search(r'\d+', instruction).group())
+    new_coords = get_coords_for_move(current_coord, current_blocks, current_direction)
 
-    elif current_direction == "E":
-        steps_east += current_blocks
-        new_coord = (current_coord[0] + current_blocks,current_coord[1])
-        if new_coord in coord_hist:
-            return_coord.append(new_coord)
-
-    elif current_direction == "S":
-        steps_south += current_blocks
-        new_coord = (current_coord[0],current_coord[1] - current_blocks)
-        if new_coord in coord_hist:
-            return_coord.append(new_coord)
-
-    elif current_direction == "W":
-        steps_west += current_blocks
-        new_coord = (current_coord[0] - current_blocks,current_coord[1])
-        if new_coord in coord_hist:
-            return_coord.append(new_coord)
-    coord_hist.append(new_coord)
-
+    for coord in new_coords:
+        if coord in coord_hist:
+            return_coord.append(coord)
+    coord_hist.extend(new_coords)
+    current_coord = new_coords[-1]
 
 y_blocks = steps_north - steps_south
 x_blocks = steps_east - steps_west
@@ -78,8 +87,8 @@ first_return_coords = return_coord[0]
 first_return_blocks = abs(first_return_coords[0]) + abs(first_return_coords[1])
 
 print(return_coord)
-print(coord_hist)
-#print(len(instructions))
-#print(f"Steps North: {steps_north}, Steps East: {steps_east}, Steps South: {steps_south}, Steps West: {steps_west}")
-#print(f"Minimum number of blocks away: {total_blocks}")
+print(len(coord_hist))
+print(len(instructions))
+print(f"Steps North: {steps_north}, Steps East: {steps_east}, Steps South: {steps_south}, Steps West: {steps_west}")
+print(f"Minimum number of blocks away: {total_blocks}")
 print(f"First returned to {first_return_coords}, {first_return_blocks} blocks away from origin.")
