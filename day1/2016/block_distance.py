@@ -8,33 +8,33 @@ def parse_instructions(file):
         instructions = re.split(r",\s",input)
     return instructions
 
-def get_coords_for_move(start_coord, num_blocks, direction):
-    coords=[]
+def get_step_coords(start_coord, num_blocks, direction):
+    step_coords=[]
     current_coord = start_coord
     if direction == "N":
         for n in range(num_blocks):
             step_coord = (current_coord[0],current_coord[1] + 1)
-            coords.append(step_coord)
-            current_coord = coords[-1]
+            step_coords.append(step_coord)
+            current_coord = step_coords[-1]
     elif direction == "E":
         for n in range(num_blocks):
             step_coord = (current_coord[0] + 1,current_coord[1])
-            coords.append(step_coord)
-            current_coord = coords[-1]
+            step_coords.append(step_coord)
+            current_coord = step_coords[-1]
     elif direction == "S":
         for n in range(num_blocks):
             step_coord = (current_coord[0],current_coord[1] - 1)
-            coords.append(step_coord)
-            current_coord = coords[-1]
+            step_coords.append(step_coord)
+            current_coord = step_coords[-1]
     elif direction == "W":
         for n in range(num_blocks):
             step_coord = (current_coord[0] - 1,current_coord[1])
-            coords.append(step_coord)
-            current_coord = coords[-1]
+            step_coords.append(step_coord)
+            current_coord = step_coords[-1]
     else:
         print("Error - direction not found")
         exit(1)
-    return coords
+    return step_coords
 
 instructions = parse_instructions("/Users/cc52/repositories/personal/aoc-10y/day1/2016/input.txt")
 directions = ["N","E","S","W"]
@@ -67,7 +67,7 @@ for instruction in instructions:
     
     # Then add the number of blocks to the correct direction tally
     current_blocks = int(re.search(r'\d+', instruction).group())
-    new_coords = get_coords_for_move(current_coord, current_blocks, current_direction)
+    new_coords = get_step_coords(current_coord, current_blocks, current_direction)
 
     for coord in new_coords:
         if coord in coord_hist:
