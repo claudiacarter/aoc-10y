@@ -1,0 +1,6 @@
+# Ignore pytest cache folders anywhere
+**/.pytest_cache/
+
+# Ignore Python bytecode caches anywhere
+**/__pycache__/
+*.py[cod]

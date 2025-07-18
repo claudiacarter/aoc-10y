@@ -23,34 +23,37 @@ def add_trios(full_measurements):
         trios.append(total)
     return trios
 
+def main():
+    #PART1
+    depths = get_input("/Users/cc52/repositories/personal/aoc-10y/day1/2021/input.txt")
+    changes =[]
 
-#PART1
-depths = get_input("/Users/cc52/repositories/personal/aoc-10y/day1/2021/input.txt")
-changes =[]
+    for i, depth in enumerate(depths):
+        if i == 0:
+            pass
+        else:
+            change = compare_to_prev(depths[i], depths[i - 1])
+            changes.append(change)
 
-for i, depth in enumerate(depths):
-    if i == 0:
-        pass
-    else:
-        change = compare_to_prev(depths[i], depths[i - 1])
-        changes.append(change)
+    counts = Counter(changes)
 
-counts = Counter(changes)
+    print(counts)
 
-print(counts)
+    #PART2
+    trios = add_trios(depths)
 
-#PART2
-trios = add_trios(depths)
+    changes =[]
 
-changes =[]
+    for i, trio in enumerate(trios):
+        if i == 0:
+            pass
+        else:
+            change = compare_to_prev(trios[i], trios[i - 1])
+            changes.append(change)
 
-for i, trio in enumerate(trios):
-    if i == 0:
-        pass
-    else:
-        change = compare_to_prev(trios[i], trios[i - 1])
-        changes.append(change)
+    counts = Counter(changes)
 
-counts = Counter(changes)
+    print(counts)
 
-print(counts)
+if __name__ == "__main__":
+    main()
